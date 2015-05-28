@@ -1,10 +1,10 @@
-bitofnewsbot
+articlebot
 ============
 
-Source of popular Reddit bot [u/bitofnewsbot](http://www.reddit.com/u/bitofnewsbot)
+Article scraping Reddit bot. Derived from @xiaoxu193's [bitofnewsbot](https://github.com/xiaoxu193/bitofnewsbot) with the significant change of scraping entire articles instead of condensing them.
 
 
-How do  I run it?
+How do I run it?
 =====================
 Setup cron to run it every minute
 
@@ -13,25 +13,14 @@ Instructions for Ubuntu:
 * Replace username and password line in bitofnewsbot
 * Install cron ``sudo apt-get install cron``
 * Open up crontab to edit cron ``sudo crontab -e``
-* Tell it to run every minute: ``* * * * * /usr/bin/python bitofnewsbot.py``
+* Tell it to run every minute: ``* * * * * /usr/bin/python articlebot.py``
 
 
 Submissions are stored in done.txt so they're not commented on again.
 
-``TODO: use sqllite3. The point is to have minimum setup``
-
-
-Dependencies
-============
-* PyTeaser: ``pip install pyteaser``
-
-Go to official [PyTeaser repo](https://github.com/xiaoxu193/PyTeaser/) for help with installation.
-
 Variables
 ========
 These are the variables you can set. 
-
-TODO: Put all this shit in a config file
 
 * submissions_limit - number of top subissions to check during each cron period
 * thresh_max - karma threshholds for commenting
