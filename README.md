@@ -1,7 +1,7 @@
 articlebot
 ============
 
-Article scraping Reddit bot. Derived from @xiaoxu193's [bitofnewsbot](https://github.com/xiaoxu193/bitofnewsbot) with the significant change of scraping entire articles instead of condensing them.
+Article scraping Reddit bot. Derived from xiaoxu193's [bitofnewsbot](https://github.com/xiaoxu193/bitofnewsbot) with the significant change of scraping entire articles instead of condensing them.
 
 
 How do I run it?
