@@ -23,3 +23,4 @@ Dependencies:
 * [praw](https://github.com/praw-dev/praw)
 * [python-dotenv](https://github.com/theskumar/python-dotenv)
 * [newspaper](https://github.com/codelucas/newspaper)
+* [py-pretty](https://pypi.python.org/pypi/py-pretty)

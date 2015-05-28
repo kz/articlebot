@@ -4,6 +4,11 @@ from os.path import join, dirname
 import praw
 from dotenv import load_dotenv
 
+
+
+# from newspaper import Article
+import pretty as pretty
+
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
@@ -18,63 +23,75 @@ USERNAME = os.environ.get("USERNAME")  # reddit username
 PASSWORD = os.environ.get("PASSWORD")  # reddit password
 COMMENTS_PER_RUN = os.environ.get("COMMENTS_PER_RUN")  # Comments per cron period
 SUBREDDITS = os.environ.get("SUBREDDITS")  # Subreddits to work check
-FILESTORE = os.environ.get("FILESTORE")  # File to store submission ids of ones that are commented
+LINK_STORE = os.environ.get("LINK_STORE")  # File to store IDs of crawled posts
+COMMENT_STORE = os.environ.get("COMMENT_STORE")  # File to store IDs of bot comments
+BLACKLIST = ["youtube", "liveleak", "imgur"]
 
 USER_AGENT = "Python:" + BOT_NAME + ":" + APP_VERSION + " (by " + AUTHOR_NAME + ")"
+print(USER_AGENT)
 
 
 def main():
-    submissions = getSubmissions()
-    done = getDone()
-    counts = 0  # how many comments made this round
+    submissions = get_submissions()
+    done = get_done()
+    counts = 0  # Number of comments made this round
 
     for submission in submissions:
         if counts >= COMMENTS_PER_RUN:
             break
-        id = submission.id
+        if any(x in submission.url for x in BLACKLIST):
+            put_done(submission.id)
+            break
+
         point = submission.ups - submission.downs
 
-        if id not in done and THRESH_MAX > point > THRESH_MIN:
-            putDone(submission.id)
-            sentences = pyteaser.SummarizeUrl(submission.url)
-            if sentences is not None:
-                counts += 1
-                comment = formComment(sentences, submission)
+        if submission.id not in done and THRESH_MAX > point > THRESH_MIN:
+            put_done(submission.id)
+            article = Article(submission.url)
+            article.download()
+            article.parse()
 
-            submission.add_comment(comment)
-            print(comment)
+            if article.text is None:
+                put_done(submission.id)
+                break
+
+            counts += 1
+            comment_text = form_comment(article, submission)
+            comment = submission.add_comment(comment_text)
+            put_comment(comment.id)
+            print(comment_text)
 
 
-def getDone():
-    with open(FILESTORE) as f:
+def get_done():
+    with open(LINK_STORE) as f:
         return f.read().splitlines()
 
 
-def putDone(id):
-    with open(FILESTORE, "a") as text_file:
-        text_file.write(id + "\n")
+def put_done(link_id):
+    with open(LINK_STORE, "a") as text_file:
+        text_file.write(link_id + "\n")
 
 
-def getSubmissions():
+def put_comment(comment_id):
+    with open(COMMENT_STORE, "a") as text_file:
+        text_file.write(comment_id + "\n")
+
+
+def get_submissions():
     r = praw.Reddit(user_agent=USER_AGENT)
     r.login(USERNAME, PASSWORD)
     return r.get_subreddit(SUBREDDITS).get_new(limit=SUBMISSIONS_LIMIT)
 
 
-def formComment(sentences, submission):
+def form_comment(article, submission):
     print(submission.title + ": " + submission.url)
 
-    point = submission.ups - submission.downs
-    comment = "**Article summary:** \n"
-    count = 0
-    if sentences is None or len(sentences) < 3:
-        return None
-    for sentence in sentences:
-        if count < SENTENCES_PER_SUMMARY:
-            sentence.replace('\n', ' ')
-            comment += ("\n>* " + sentence + "\n")
-            count += 1
-    comment += "\n^I'm ^a ^bot, ^v2. ^Report ^problems [^here](http://reddit.com/r/bitofnewsbot). \n\n**^Learn ^how ^it ^works: [^Bit ^of ^News](http://www.bitofnews.com/about.html)**"
+    comment = "**Article title:** " + article.title + "\n"
+    if article.publish_date is not None:
+        comment += "**Publish date:** " + pretty.date(article.publish_date) + "\n"
+    comment += "**Article text:** \n--- \n" + article.text + "\n---"
+    comment += "\n^I'm ^a ^bot. ^Report ^problems [^here](http://www.reddit.com/message/compose/?to="
+    comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")."
     return comment
 
 
