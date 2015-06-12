@@ -13,7 +13,7 @@ APP_VERSION = "v1.0.0"
 
 BOT_NAME = os.environ.get("BOT_NAME")
 AUTHOR_NAME = os.environ.get("AUTHOR_NAME")
-SUBMISSIONS_LIMIT = int(os.environ.get("SUBMISSIONS_LIMIT"))  # Number of new submissions to check during each cron period
+SUBMISSIONS_LIMIT = int(os.environ.get("SUBMISSIONS_LIMIT"))  # Number of new submissions to check per run
 THRESH_MIN = int(os.environ.get("THRESH_MIN"))  # Minimum karma threshold for commenting
 THRESH_MAX = int(os.environ.get("THRESH_MAX"))  # Maximum karma threshold for commenting
 USERNAME = os.environ.get("USERNAME")  # reddit username
@@ -48,7 +48,7 @@ def main():
             article.download()
             article.parse()
 
-            if article.text is None:
+            if not article.text.isspace():
                 put_done(submission.id)
                 break
 
@@ -85,7 +85,7 @@ def form_comment(article, submission):
 
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
-        comment += "**Publish date:** " + pretty.date(article.publish_date) + "\n"
+        comment += "\n**Publish date:** " + pretty.date(article.publish_date) + "\n"
     comment += "**Article text:** \n--- \n" + article.text + "\n---"
     comment += "\n^I'm ^a ^bot. ^Report ^problems [^here](http://www.reddit.com/message/compose/?to="
     comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")."
