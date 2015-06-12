@@ -35,10 +35,11 @@ def main():
 
     for submission in submissions:
         if counts >= COMMENTS_PER_RUN:
+            print("Comment count for this run reached. Exiting.")
             break
         if any(x in submission.url for x in BLACKLIST):
             put_done(submission.id)
-            break
+            continue
 
         point = submission.ups - submission.downs
 
@@ -50,7 +51,7 @@ def main():
 
             if not article.text.isspace():
                 put_done(submission.id)
-                break
+                continue
 
             counts += 1
             comment_text = form_comment(article, submission)
