@@ -50,6 +50,7 @@ def main():
             article.parse()
 
             if not article.text.isspace():
+                print(article.text)
                 print(submission.id + " does not have article text. Continuing.")
                 time.sleep(2)
                 continue
