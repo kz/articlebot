@@ -13,12 +13,12 @@ APP_VERSION = "v1.0.0"
 
 BOT_NAME = os.environ.get("BOT_NAME")
 AUTHOR_NAME = os.environ.get("AUTHOR_NAME")
-SUBMISSIONS_LIMIT = os.environ.get("SUBMISSIONS_LIMIT")  # Number of new submissions to check during each cron period
-THRESH_MIN = os.environ.get("THRESH_MIN")  # Minimum karma threshold for commenting
-THRESH_MAX = os.environ.get("THRESH_MAX")  # Maximum karma threshold for commenting
+SUBMISSIONS_LIMIT = int(os.environ.get("SUBMISSIONS_LIMIT"))  # Number of new submissions to check during each cron period
+THRESH_MIN = int(os.environ.get("THRESH_MIN"))  # Minimum karma threshold for commenting
+THRESH_MAX = int(s.environ.get("THRESH_MAX"))  # Maximum karma threshold for commenting
 USERNAME = os.environ.get("USERNAME")  # reddit username
 PASSWORD = os.environ.get("PASSWORD")  # reddit password
-COMMENTS_PER_RUN = os.environ.get("COMMENTS_PER_RUN")  # Comments per cron period
+COMMENTS_PER_RUN = int(os.environ.get("COMMENTS_PER_RUN"))  # Comments per cron period
 SUBREDDITS = os.environ.get("SUBREDDITS")  # Subreddits to work check
 LINK_STORE = os.environ.get("LINK_STORE")  # File to store IDs of crawled posts
 COMMENT_STORE = os.environ.get("COMMENT_STORE")  # File to store IDs of bot comments
