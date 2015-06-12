@@ -49,8 +49,7 @@ def main():
             article.download()
             article.parse()
 
-            if not article.text.isspace():
-                print(article.text)
+            if article.text.isspace():
                 print(submission.id + " does not have article text. Continuing.")
                 time.sleep(2)
                 continue
