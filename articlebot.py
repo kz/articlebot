@@ -57,7 +57,7 @@ def main():
             counts += 1
             comment_text = form_comment(article, submission)
             comment = submission.add_comment(comment_text)
-            put_comment(comment.id)
+            put_comment(comment.id)  # TODO - Implement exception handling (esp. for rate limiting)
             time.sleep(2)
 
 
