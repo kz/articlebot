@@ -1,5 +1,6 @@
 import os
 from os.path import join, dirname
+import time
 
 import praw
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ COMMENTS_PER_RUN = int(os.environ.get("COMMENTS_PER_RUN"))  # Comments per cron 
 SUBREDDITS = os.environ.get("SUBREDDITS")  # Subreddits to work check
 LINK_STORE = os.environ.get("LINK_STORE")  # File to store IDs of crawled posts
 COMMENT_STORE = os.environ.get("COMMENT_STORE")  # File to store IDs of bot comments
-BLACKLIST = ["youtube", "liveleak", "imgur"]
+BLACKLIST = ["youtube", "liveleak", "imgur", "vid.me"]
 
 USER_AGENT = "Python:" + BOT_NAME + ":" + APP_VERSION + " (by " + AUTHOR_NAME + ")"
 print(USER_AGENT)
@@ -50,12 +51,14 @@ def main():
 
             if not article.text.isspace():
                 print(submission.id + " does not have article text. Continuing.")
+                time.sleep(2)
                 continue
 
             counts += 1
             comment_text = form_comment(article, submission)
             comment = submission.add_comment(comment_text)
             put_comment(comment.id)
+            time.sleep(2)
 
 
 def get_done():
