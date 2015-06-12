@@ -50,7 +50,7 @@ def main():
             article.parse()
 
             if not article.text.isspace():
-                put_done(submission.id)
+                print(submission.id + "does not have article text. Continuing.")
                 continue
 
             counts += 1
