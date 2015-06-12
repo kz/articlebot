@@ -4,7 +4,6 @@ from os.path import join, dirname
 import praw
 from dotenv import load_dotenv
 from newspaper import Article
-import pretty as pretty
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -50,14 +49,13 @@ def main():
             article.parse()
 
             if not article.text.isspace():
-                print(submission.id + "does not have article text. Continuing.")
+                print(submission.id + " does not have article text. Continuing.")
                 continue
 
             counts += 1
             comment_text = form_comment(article, submission)
             comment = submission.add_comment(comment_text)
             put_comment(comment.id)
-            print(comment_text)
 
 
 def get_done():
@@ -86,10 +84,10 @@ def form_comment(article, submission):
 
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
-        comment += "\n**Publish date:** " + pretty.date(article.publish_date) + "\n"
+        comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
     comment += "**Article text:** \n--- \n" + article.text + "\n---"
     comment += "\n^I'm ^a ^bot. ^Report ^problems [^here](http://www.reddit.com/message/compose/?to="
-    comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")."
+    comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")^."
     return comment
 
 
