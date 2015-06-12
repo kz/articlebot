@@ -1,0 +1,4 @@
+python-dotenv
+py-pretty
+praw
+newspaper3k

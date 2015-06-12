@@ -3,10 +3,7 @@ from os.path import join, dirname
 
 import praw
 from dotenv import load_dotenv
-
-
-
-# from newspaper import Article
+from newspaper import Article
 import pretty as pretty
 
 dotenv_path = join(dirname(__file__), '.env')
