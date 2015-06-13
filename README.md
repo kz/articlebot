@@ -12,6 +12,7 @@ Instructions for Ubuntu:
 
 * Install dependencies
 * Rename ``.env.example`` to ``.env`` and edit accordingly
+* Rename ``blacklist.txt.example``, ``comments.txt.example`` and ``links.txt.example`` to ``*.txt`` accordingly
 * Install cron ``sudo apt-get install cron``
 * Open up crontab to edit cron ``sudo crontab -e``
 * Tell it to run every minute: ``* * * * * /usr/bin/python articlebot.py``
