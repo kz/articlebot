@@ -109,9 +109,10 @@ def form_comment(article, submission):
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
         comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
-    comment += "**Article text:** \n--- \n" + article.text + "\n\n-----"
-    comment += "\n^I'm ^a ^bot. ^Report ^problems [^here](http://www.reddit.com/message/compose/?to="
-    comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")^."
+    comment += "**Article text:** \n--- \n" + article.text + \
+               "\n\n-----\n^I'm ^a ^bot. ^Feedback? ^Get ^in ^touch [^here](http://www.reddit.com/message/compose/?to=" \
+               + AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=**Article%20URL%3A**%20"\
+               + submission.url + "%5Cn%5Cn**Post%20URL%3A**%20" + submission.permalink + ")^."
     return comment
 
 
