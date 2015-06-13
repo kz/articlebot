@@ -22,7 +22,7 @@ COMMENTS_PER_RUN = int(os.environ.get("COMMENTS_PER_RUN"))  # Comments per cron 
 SUBREDDITS = os.environ.get("SUBREDDITS")  # Subreddits to work check
 LINK_STORE = os.environ.get("LINK_STORE")  # File to store IDs of crawled posts
 COMMENT_STORE = os.environ.get("COMMENT_STORE")  # File to store IDs of bot comments
-BLACKLIST = ["youtube", "liveleak", "imgur", "vid.me"]
+BLACKLIST_STORE = os.environ.get("BLACKLIST_STORE")  # File to store blacklisted URLs
 
 USER_AGENT = "Python:" + BOT_NAME + ":" + APP_VERSION + " (by " + AUTHOR_NAME + ")"
 print(USER_AGENT)
@@ -35,6 +35,7 @@ def main():
         except praw.errors.HttpException:
             print('HTTP Exception occurred. Exiting.')
             break
+        blacklist = get_blacklist()
         done = get_done()
         counts = 0  # Number of comments made this round
 
@@ -42,7 +43,7 @@ def main():
             if counts >= COMMENTS_PER_RUN:
                 print("Comment count for this run reached. Exiting.")
                 break
-            if any(x in submission.url for x in BLACKLIST):
+            if any(x in submission.url for x in blacklist):
                 continue
 
             point = submission.ups - submission.downs
@@ -69,6 +70,11 @@ def main():
                     put_done(submission.id)
                     break
         break
+
+
+def get_blacklist():
+    with open(BLACKLIST_STORE) as f:
+        return f.read().splitlines()
 
 
 def get_done():
