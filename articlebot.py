@@ -1,6 +1,7 @@
 import os
 from os.path import join, dirname
 import time
+import warnings
 
 import praw
 from dotenv import load_dotenv
@@ -63,10 +64,11 @@ def main():
                         comment = submission.add_comment(comment_text)
                         put_comment(comment.id)
                     except praw.errors.RateLimitExceeded as error:
-                        print('Rate limit exceeded. Sleeping for %d seconds.' % error.sleep_time)
+                        print('Rate limit exceeded. Sleeping for %d seconds. Skipping comment.' % error.sleep_time)
                         time.sleep(error.sleep_time)
                         break
                     counts += 1
+                    print('Added comment for post %s - %s' % submission.id, comment.permalink)
                     put_done(submission.id)
                     break
         break
@@ -99,7 +101,7 @@ def get_submissions():
 
 
 def form_comment(article, submission):
-    print('')
+    print('Forming comment for ID %s - %s - %s' % submission.id, article.title, article.url)
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
         comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
@@ -108,6 +110,9 @@ def form_comment(article, submission):
     comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")^."
     return comment
 
+# Surpress warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
 
 if __name__ == "__main__":
     main()
