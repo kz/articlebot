@@ -58,9 +58,9 @@ def main():
                     continue
 
                 comment_text = form_comment(article, submission)
-                comment = submission.add_comment(comment_text)
                 while True:
                     try:
+                        comment = submission.add_comment(comment_text)
                         put_comment(comment.id)
                     except praw.errors.RateLimitExceeded as error:
                         print('Rate limit exceeded. Sleeping for %d seconds.' % error.sleep_time)
