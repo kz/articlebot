@@ -7,6 +7,10 @@ import praw
 from dotenv import load_dotenv
 from newspaper import Article
 
+
+# Suppress warnings
+warnings.filterwarnings("ignore")
+
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
@@ -68,7 +72,7 @@ def main():
                         time.sleep(error.sleep_time)
                         break
                     counts += 1
-                    print('Added comment for post %s - %s' % submission.id, comment.permalink)
+                    print('Added comment for post %s - %s' % (submission.id, comment.permalink))
                     put_done(submission.id)
                     break
         break
@@ -101,7 +105,7 @@ def get_submissions():
 
 
 def form_comment(article, submission):
-    print('Forming comment for ID %s - %s - %s' % submission.id, article.title, article.url)
+    print('Forming comment for ID %s - %s - %s' % (submission.id, article.title, article.url))
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
         comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
@@ -110,9 +114,6 @@ def form_comment(article, submission):
     comment += AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=" + submission.url + ")^."
     return comment
 
-# Surpress warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
 
 if __name__ == "__main__":
     main()
