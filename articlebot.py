@@ -74,6 +74,7 @@ def main():
                     counts += 1
                     print('Added comment for post %s - %s' % (submission.id, comment.permalink))
                     put_done(submission.id)
+                    sleep(2)
                     break
         break
 
