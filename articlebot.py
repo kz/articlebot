@@ -29,36 +29,46 @@ print(USER_AGENT)
 
 
 def main():
-    submissions = get_submissions()
-    done = get_done()
-    counts = 0  # Number of comments made this round
-
-    for submission in submissions:
-        if counts >= COMMENTS_PER_RUN:
-            print("Comment count for this run reached. Exiting.")
+    while True:
+        try:
+            submissions = get_submissions()
+        except praw.errors.HttpException:
+            print('HTTP Exception occurred. Exiting.')
             break
-        if any(x in submission.url for x in BLACKLIST):
-            put_done(submission.id)
-            continue
+        done = get_done()
+        counts = 0  # Number of comments made this round
 
-        point = submission.ups - submission.downs
-
-        if submission.id not in done and THRESH_MAX > point > THRESH_MIN:
-            put_done(submission.id)
-            article = Article(submission.url)
-            article.download()
-            article.parse()
-
-            if article.text.isspace():
-                print(submission.id + " does not have article text. Continuing.")
-                time.sleep(2)
+        for submission in submissions:
+            if counts >= COMMENTS_PER_RUN:
+                print("Comment count for this run reached. Exiting.")
+                break
+            if any(x in submission.url for x in BLACKLIST):
                 continue
 
-            counts += 1
-            comment_text = form_comment(article, submission)
-            comment = submission.add_comment(comment_text)
-            put_comment(comment.id)  # TODO - Implement exception handling (esp. for rate limiting)
-            time.sleep(2)
+            point = submission.ups - submission.downs
+
+            if submission.id not in done and THRESH_MAX > point > THRESH_MIN:
+                article = Article(submission.url)
+                article.download()
+                article.parse()
+
+                if article.text.isspace():
+                    print(submission.id + " does not have article text. Continuing.")
+                    continue
+
+                comment_text = form_comment(article, submission)
+                comment = submission.add_comment(comment_text)
+                while True:
+                    try:
+                        put_comment(comment.id)
+                    except praw.errors.RateLimitExceeded as error:
+                        print('Rate limit exceeded. Sleeping for %d seconds.' % error.sleep_time)
+                        time.sleep(error.sleep_time)
+                        break
+                    counts += 1
+                    put_done(submission.id)
+                    break
+        break
 
 
 def get_done():
