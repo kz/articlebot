@@ -3,6 +3,7 @@ articlebot
 
 Article scraping Reddit bot. Derived from xiaoxu193's [bitofnewsbot](https://github.com/xiaoxu193/bitofnewsbot) with the significant change of scraping entire articles instead of condensing them.
 
+You can find an example of articlebot in use by [/u/justice_article_bot](http://www.reddit.com/user/justice_article_bot).
 
 How do I run it?
 =====================
@@ -17,7 +18,7 @@ Instructions for Ubuntu:
 * Open up crontab to edit cron ``sudo crontab -e``
 * Tell it to run every minute: ``* * * * * /usr/bin/python articlebot.py``
 
-Submissions are stored in done.txt so they're not commented on again.
+``done.txt`` and ``comments.txt`` prevent duplicate comments. ``blacklist.txt`` causes bots to ignore listed sites.
 
 Dependencies:
 
