@@ -99,8 +99,7 @@ def get_submissions():
 
 
 def form_comment(article, submission):
-    print(submission.title + ": " + submission.url)
-
+    print('')
     comment = "**Article title:** " + article.title + "\n"
     if article.publish_date is not None:
         comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
