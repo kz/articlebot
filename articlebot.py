@@ -112,7 +112,7 @@ def form_comment(article, submission):
     comment += "**Article text:** \n--- \n" + article.text + \
                "\n\n-----\n^I'm ^a ^bot. ^Feedback? ^Get ^in ^touch [^here](http://www.reddit.com/message/compose/?to=" \
                + AUTHOR_NAME + "&subject=" + BOT_NAME + "%20enquiry&message=**Article%20URL%3A**%20"\
-               + submission.url + "%5Cn%5Cn**Post%20URL%3A**%20" + submission.permalink + ")^."
+               + submission.url + "%0D%0D**Post%20URL%3A**%20" + submission.permalink + "%0D%0D)^."
     return comment
 
 
