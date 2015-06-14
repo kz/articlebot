@@ -111,6 +111,7 @@ def form_comment(article, submission):
     if article.publish_date is not None:
         comment += "\n**Publish date:** " + article.publish_date.strftime("%B %d, %Y") + "\n"
     if len(article.text) > 9500:
+        print("Article length is greater than 9500. Truncating.")
         article.text = article.text[0:9500] + "... [Read Full Article](%s)" % article.url
     comment += "**Article text:** \n--- \n" + article.text + \
                "\n\n-----\n^I'm ^a ^bot. ^Feedback? ^Get ^in ^touch [^here](http://www.reddit.com/message/compose/?to=" \
