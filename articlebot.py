@@ -28,6 +28,7 @@ SUBREDDITS = os.environ.get("SUBREDDITS")  # Subreddits to work check
 LINK_STORE = os.environ.get("LINK_STORE")  # File to store IDs of crawled posts
 COMMENT_STORE = os.environ.get("COMMENT_STORE")  # File to store IDs of bot comments
 BLACKLIST_STORE = os.environ.get("BLACKLIST_STORE")  # File to store blacklisted URLs
+MIN_CHAR_COUNT = int(os.environ.get("MIN_CHAR_COUNT")) # Minimum character count
 
 USER_AGENT = "Python:" + BOT_NAME + ":" + APP_VERSION + " (by " + AUTHOR_NAME + ")"
 print(USER_AGENT)
@@ -66,6 +67,8 @@ def main():
                 while True:
                     try:
                         comment = submission.add_comment(comment_text)
+                        if len(comment) < MIN_CHAR_COUNT:
+                            break
                         put_comment(comment.id)
                     except praw.errors.RateLimitExceeded as error:
                         print('Rate limit exceeded. Sleeping for %d seconds. Skipping comment.' % error.sleep_time)
