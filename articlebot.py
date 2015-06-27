@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-APP_VERSION = "v1.0.0"
+APP_VERSION = "v1.0.1"
 
 BOT_NAME = os.environ.get("BOT_NAME")
 AUTHOR_NAME = os.environ.get("AUTHOR_NAME")
